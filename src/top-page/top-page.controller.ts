@@ -5,13 +5,11 @@ import { TopPageModel } from './top-page.model';
 
 @Controller('top-page')
 export class TopPageController {
-    constructor(private readonly configService: ConfigService) {}
+    // constructor(private readonly configService: ConfigService) {}
 
     /** Omit позволяет исключить из класса переданные поля */
     @Post('create')
-    async create(@Body() dto: Omit<TopPageModel, '_id'>) {
-        this.configService.get('TEST');
-    }
+    async create(@Body() dto: Omit<TopPageModel, '_id'>) {}
 
     @Get(':id')
     async get(@Param('id') id: string) {}
