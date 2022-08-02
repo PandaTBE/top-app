@@ -5,6 +5,7 @@ import { ReviewModel } from './review.model';
 import { Types } from 'mongoose';
 import { InjectModel } from 'nestjs-typegoose';
 
+/** nest g service review - команда для создания сервиса для модуля review */
 @Injectable()
 export class ReviewService {
     constructor(@InjectModel(ReviewModel) private readonly reviewModel: ModelType<ReviewModel>) {}
