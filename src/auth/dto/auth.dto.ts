@@ -1,4 +1,4 @@
-import { IsString, Max, Min } from 'class-validator';
+import { IsString } from 'class-validator';
 
 /** data transfer object (объект передачи данных) */
 export class AuthDto {
