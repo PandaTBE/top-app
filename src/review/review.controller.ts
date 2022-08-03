@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { REVIEW_NOT_FOUND } from './review.constants';
-import { UserEmail } from '../../src/decorators/user-email.decorator';
+import { UserEmail } from '../decorators/user-email.decorator';
 
 @Controller('review')
 export class ReviewController {
