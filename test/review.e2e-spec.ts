@@ -1,3 +1,4 @@
+import { AuthDto } from './../src/auth/dto/auth.dto';
 import { CreateReviewDto } from './../src/review/dto/create-review.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
@@ -7,6 +8,11 @@ import { Types, disconnect } from 'mongoose';
 import { REVIEW_NOT_FOUND } from '../src/review/review.constants';
 
 const productId = new Types.ObjectId().toHexString();
+
+const loginDto: AuthDto = {
+    login: 'test6@gmail.com',
+    password: 'test',
+};
 
 const testDto: CreateReviewDto = {
     name: 'Test',
@@ -19,6 +25,7 @@ const testDto: CreateReviewDto = {
 describe('AppController (e2e)', () => {
     let app: INestApplication;
     let createdId: string;
+    let token: string;
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,6 +34,9 @@ describe('AppController (e2e)', () => {
 
         app = moduleFixture.createNestApplication();
         await app.init();
+
+        const { body } = await request(app.getHttpServer()).post('/auth/login').send(loginDto);
+        token = body.access_token;
     });
 
     it('/review/create (POST) - success', async () => {
@@ -44,10 +54,7 @@ describe('AppController (e2e)', () => {
         return request(app.getHttpServer())
             .post('/review/create')
             .send({ ...testDto, rating: 0 })
-            .expect(400)
-            .then(({ body }: request.Response) => {
-                console.log(body);
-            });
+            .expect(400);
     });
 
     it('/review/byProduct/:productId (GET) - success', async () => {
@@ -71,12 +78,14 @@ describe('AppController (e2e)', () => {
     it('/review/:id (DELETE) - success', () => {
         return request(app.getHttpServer())
             .delete('/review/' + createdId)
+            .set('Authorization', 'Bearer ' + token)
             .expect(200);
     });
 
     it('/review/:id (DELETE) - fail', () => {
         return request(app.getHttpServer())
             .delete('/review/' + new Types.ObjectId().toHexString())
+            .set('Authorization', 'Bearer ' + token)
             .expect(404, {
                 statusCode: 404,
                 message: REVIEW_NOT_FOUND,
