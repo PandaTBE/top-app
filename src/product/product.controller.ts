@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { FindProductDto } from './dto/find-product.dto';
-import { ProductModel } from './product.model';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -28,7 +27,7 @@ export class ProductController {
 
     @Get(':id')
     async get(@Param('id') id: string) {
-        const product = this.productService.findById(id);
+        const product = await this.productService.findById(id);
 
         if (!product) {
             throw new NotFoundException(PRODUCT_NOT_FOUND_ERROR);
@@ -39,7 +38,7 @@ export class ProductController {
 
     @Delete(':id')
     async delete(@Param('id') id: string) {
-        const deletedProduct = this.productService.deleteById(id);
+        const deletedProduct = await this.productService.deleteById(id);
 
         if (!deletedProduct) {
             throw new NotFoundException(PRODUCT_NOT_FOUND_ERROR);
@@ -48,7 +47,7 @@ export class ProductController {
 
     @Patch(':id')
     async patch(@Param('id') id: string, @Body() dto: CreateProductDto) {
-        const updatedProduct = this.productService.updateById(id, dto);
+        const updatedProduct = await this.productService.updateById(id, dto);
 
         if (!updatedProduct) {
             throw new NotFoundException(PRODUCT_NOT_FOUND_ERROR);
